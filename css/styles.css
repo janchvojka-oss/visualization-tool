@@ -1,0 +1,159 @@
+body, html {
+    margin: 0; padding: 0; width: 100%; height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex; flex-direction: column; background-color: #f8f9fa; overflow: hidden;
+}
+
+/* Toolbar Styles */
+#toolbar {
+    background: #ffffff; height: 60px; flex-shrink: 0; display: flex;
+    align-items: center; padding: 0 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: relative; z-index: 100;
+}
+#toolbar h2 { margin: 0; font-size: 18px; color: #333; }
+.spacer { flex-grow: 1; }
+button.top-btn {
+    border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;
+    font-weight: bold; transition: background 0.2s, opacity 0.2s; margin-left: 8px;
+}
+button.top-btn:hover { opacity: 0.8; }
+.btn-primary { background: #0d6efd; color: white; }
+.btn-secondary { background: #6c757d; color: white; }
+.btn-outline { background: #f8f9fa; color: #333; border: 1px solid #ccc; }
+.toolbar-divider { width: 1px; height: 30px; background-color: #ddd; margin: 0 15px; }
+
+/* Main App Container */
+#main-content { display: flex; flex-grow: 1; overflow: hidden; position: relative; }
+
+/* Whiteboard & Infinite Canvas Styles */
+#whiteboard {
+    flex-grow: 1; position: relative; background-color: #f0f0f0;
+    background-image: radial-gradient(#d7d7d7 1px, transparent 1px);
+    background-size: 20px 20px; overflow: hidden; cursor: grab;
+}
+#whiteboard:active { cursor: grabbing; }
+#pan-container {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform-origin: 0 0;
+}
+
+/* Floating Exit Hub Button */
+#exit-hub-btn {
+    position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+    background: #212529; color: white; border: none; padding: 10px 20px;
+    border-radius: 30px; font-weight: bold; font-size: 14px; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 200; display: none;
+    transition: background 0.2s;
+}
+#exit-hub-btn:hover { background: #495057; }
+
+/* Side Panel Styles */
+#side-panel {
+    width: 20%; min-width: 280px; background: #ffffff; border-left: 1px solid #ddd;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.05); display: flex; flex-direction: column;
+    padding: 20px; box-sizing: border-box; overflow-y: auto; z-index: 90;
+}
+.panel-placeholder { color: #6c757d; text-align: center; margin-top: 50px; font-style: italic; }
+#side-panel h3 { margin-top: 0; color: #212529; word-break: break-word; }
+#editor-toolbar { display: flex; gap: 8px; margin-bottom: 10px; }
+.editor-btn { background: #f0f0f0; border: 1px solid #ccc; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 14px; }
+.editor-btn:hover { background: #e0e0e0; }
+#rich-text-editor { flex-shrink: 0; min-height: 150px; border: 1px solid #ccc; border-radius: 6px; padding: 12px; background: #fafafa; outline: none; overflow-y: auto; line-height: 1.5; margin-bottom: 10px; }
+#rich-text-editor:focus { background: #ffffff; border-color: #0d6efd; box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1); }
+#details-display { line-height: 1.6; color: #333; margin-bottom: 10px; }
+#details-display ul, #rich-text-editor ul { padding-left: 20px; }
+.related-section { margin-top: auto; border-top: 1px solid #eee; padding-top: 15px; }
+.related-title { font-size: 12px; font-weight: bold; color: #888; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+.related-list { display: flex; flex-direction: column; gap: 8px; }
+.related-item { display: flex; align-items: center; justify-content: space-between; font-size: 13px; background: #f8f9fa; border: 1px solid #e9ecef; padding: 8px 12px; border-radius: 6px; transition: all 0.2s; }
+.related-item:hover { background: #e0f2fe; border-color: #bae6fd; }
+.related-item-text { color: #0d6efd; font-weight: 600; flex-grow: 1; cursor: pointer; }
+.related-item-text:hover { text-decoration: underline; }
+.related-remove { background: none; border: none; color: #dc3545; cursor: pointer; font-size: 16px; font-weight: bold; padding: 0 4px; line-height: 1; }
+.related-add { display: flex; gap: 5px; margin-top: 12px; }
+.related-select { flex-grow: 1; padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
+
+/* SVG Overlay */
+#svg-canvas { position: absolute; top: 0; left: 0; width: 1px; height: 1px; overflow: visible; pointer-events: none; z-index: 10; }
+path.edge { stroke: #6c757d; stroke-width: 3; fill: none; pointer-events: visibleStroke; cursor: pointer; transition: stroke 0.2s; }
+path.edge:hover { stroke: #dc3545; }
+path.connecting-edge { stroke: #198754; stroke-dasharray: 6, 4; fill: none; pointer-events: none; }
+
+/* Base Node Styles (Rectangles) */
+.node {
+    position: absolute; width: 160px; background: white; border: 2px solid #ccc; border-radius: 8px;
+    padding: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); cursor: grab; display: flex; flex-direction: column; gap: 8px;
+    z-index: 20; user-select: none; transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.node:active { cursor: grabbing; }
+.node.selected { background-color: #e0f2fe; border-color: #0d6efd; box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2); }
+.node.display-mode { cursor: pointer; justify-content: center; min-height: 50px; }
+
+.node.display-mode.stacked { box-shadow: 0 5px 0 -2px #fff, 0 5px 0 0px #0d6efd, 0 10px 0 -4px #fff, 0 10px 0 -2px #0d6efd, 0 14px 8px rgba(13, 110, 253, 0.15); }
+.node.selected.stacked { box-shadow: 0 5px 0 -2px #fff, 0 5px 0 0px #0d6efd, 0 10px 0 -4px #fff, 0 10px 0 -2px #0d6efd, 0 14px 12px rgba(13, 110, 253, 0.3); }
+
+/* Edit Mode UI Controls */
+.node input.title { font-size: 14px; font-weight: bold; text-align: center; border: 1px solid #ddd; padding: 6px; border-radius: 4px; font-family: inherit; background: transparent; }
+.level-container { font-size: 12px; color: #555; display: flex; align-items: center; justify-content: space-between; }
+.level-container input { width: 50px; text-align: center; border: 1px solid #ddd; border-radius: 4px; padding: 4px; background: transparent; }
+.node button.delete-btn { background: rgba(255,255,255,0.9); border: 1px solid #ddd; color: #dc3545; padding: 6px; font-size: 12px; cursor: pointer; border-radius: 4px; }
+.node button.delete-btn:hover { background: #f8d7da; border-color: #f5c6cb; }
+
+/* --- NEW: HUB SPECIFIC STYLES --- */
+.node.hub {
+    border: 3px solid #198754; background: transparent; box-shadow: none; z-index: 15;
+    min-width: 250px; min-height: 150px; padding: 0; justify-content: flex-start;
+}
+.node.hub input.hub-title {
+    position: absolute; top: -35px; left: -3px; border: none; background: transparent;
+    color: #198754; font-size: 18px; font-weight: bold; text-align: left;
+}
+.node.hub .display-title.hub-title {
+    position: absolute; top: -30px; left: 0; color: #198754; font-size: 18px; font-weight: bold;
+}
+
+/* Floating controls inside hub for Edit Mode */
+.node.hub .hub-controls {
+    position: absolute; top: 10px; right: 10px; display: flex; gap: 10px; z-index: 30;
+}
+
+/* Hub Resize Handle */
+.resize-handle {
+    position: absolute; right: -2px; bottom: -2px; width: 16px; height: 16px; 
+    background: #198754; cursor: nwse-resize; border-radius: 4px 0 0 0; z-index: 30;
+}
+
+/* Hub Inactive Display State */
+.node.hub.inactive {
+    background: #198754; display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.hub-zoom-icon { color: white; width: 48px; height: 48px; opacity: 0.9; }
+
+/* Hub Active Display State (The 30% Black Shadow Mask) */
+.node.hub.active {
+    background: transparent; z-index: 40; border-color: #198754;
+    box-shadow: 0 0 0 99999px rgba(0, 0, 0, 0.3); /* Massive shadow creates the focus area */
+}
+/* Inner nodes get elevated above the Active Hub so they are clickable */
+.node.inner-node { z-index: 50; }
+
+
+/* Connection Ports */
+.port {
+    position: absolute; width: 12px; height: 12px; background: #fff; border: 2px solid #ccc; border-radius: 50%;
+    transform: translate(-50%, -50%); cursor: crosshair; z-index: 60; transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+.port:hover { background: #0d6efd; border-color: #0d6efd; transform: translate(-50%, -50%) scale(1.3); }
+.port.active { background: #198754; border-color: #198754; transform: translate(-50%, -50%) scale(1.3); }
+
+/* Pill Expand/Collapse Buttons */
+.expand-btn {
+    position: absolute; bottom: -14px; left: 50%; transform: translateX(-50%); padding: 4px 14px;
+    border-radius: 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: bold;
+    cursor: pointer; z-index: 60; display: flex; align-items: center; justify-content: center; gap: 6px; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15); border: 2px solid white; white-space: nowrap; transition: all 0.2s ease;
+}
+.expand-btn.collapsed { background: #0d6efd; color: white; }
+.expand-btn.collapsed:hover { background: #0b5ed7; }
+.expand-btn.expanded { background: #f8f9fa; color: #6c757d; border-color: #e9ecef; }
+.expand-btn.expanded:hover { background: #e2e6ea; color: #495057; }
+.expand-btn svg { width: 14px; height: 14px; }
