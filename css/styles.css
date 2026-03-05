@@ -116,11 +116,14 @@ path.connecting-edge { stroke: #198754; stroke-dasharray: 6, 4; fill: none; poin
     position: absolute; top: 10px; right: 10px; display: flex; gap: 10px; z-index: 30;
 }
 
-/* Hub Resize Handle */
+/* Resize Handle (For all nodes) */
 .resize-handle {
-    position: absolute; right: -2px; bottom: -2px; width: 16px; height: 16px; 
-    background: #198754; cursor: nwse-resize; border-radius: 4px 0 0 0; z-index: 30;
+    position: absolute; right: 0px; bottom: 0px; width: 16px; height: 16px; 
+    cursor: nwse-resize; border-radius: 4px 0 8px 0; z-index: 30;
 }
+/* Blue for standard nodes, Green for Hubs */
+.node:not(.hub) .resize-handle { background: #0d6efd; }
+.node.hub .resize-handle { background: #198754; }
 
 /* Hub Inactive Display State */
 .node.hub.inactive {
