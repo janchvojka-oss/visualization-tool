@@ -11,15 +11,15 @@ const iconZoom = `<svg class="hub-zoom-icon" viewBox="0 0 24 24" fill="none" str
 
 let state = {
     nodes:[
-        { id: 10, type: 'hub', x: 150, y: 220, width: 400, height: 300, text: 'Main Processing Hub', level: 1, details: 'Everything inside here runs automatically.' },
-        { id: 1, type: 'rectangle', x: 200, y: 100, text: 'L1 (Start)', level: 1, details: '<b>Overview:</b><br>Start here.', related: [4] },
-        { id: 2, type: 'rectangle', x: 200, y: 280, text: 'L2 (Inside)', level: 2, details: 'I am inside the Hub.', related:[] },
-        { id: 3, type: 'rectangle', x: 350, y: 400, text: 'L3 (Inside)', level: 3, details: 'Deepest level details.', related:[] },
-        { id: 4, type: 'rectangle', x: 600, y: 100, text: 'L1 (External)', level: 1, details: 'External node.', related: [1] }
+        { id: 10, type: 'hub', x: 150, y: 220, width: 400, height: 300, text: 'Main Processing Hub', level: 1, details: 'Everything inside here runs automatically.', related: [] },
+        { id: 1, type: 'rectangle', x: 200, y: 100, width: 160, height: 76, text: 'L1 (Start)', level: 1, details: '<b>Overview:</b><br>Start here.', related: [4] },
+        { id: 2, type: 'rectangle', x: 200, y: 280, width: 160, height: 76, text: 'L2 (Inside)', level: 2, details: 'I am inside the Hub.', related:[] },
+        { id: 3, type: 'rectangle', x: 350, y: 400, width: 160, height: 76, text: 'L3 (Inside)', level: 3, details: 'Deepest level details.', related:[] },
+        { id: 4, type: 'rectangle', x: 600, y: 100, width: 160, height: 76, text: 'L1 (External)', level: 1, details: 'External node.', related: [1] }
     ],
     edges:[
-        { source: 1, sourcePort: 'b50', target: 10, targetPort: 't50' }, // Start connects to Hub
-        { source: 10, sourcePort: 'l50', target: 2, targetPort: 't50' }, // Hub connects to inner L2
+        { source: 1, sourcePort: 'b50', target: 10, targetPort: 't50' }, 
+        { source: 10, sourcePort: 'l50', target: 2, targetPort: 't50' }, 
         { source: 2, sourcePort: 'b50', target: 3, targetPort: 'l50' },
         { source: 4, sourcePort: 'b50', target: 10, targetPort: 'r25' }
     ],
@@ -27,19 +27,18 @@ let state = {
     expandedNodes: new Set(),
     connecting: null,
     draggingNode: null,
-    draggedChildren: null, // Tracks inner nodes moving alongside a Hub
+    draggedChildren: null, 
     dragOffset: { x: 0, y: 0 },
     visibleSet: new Set(),
     mousePos: { x: 0, y: 0 },
     selectedNode: null,
     
-    // Zoom & Camera
     pan: { x: 0, y: 0 },
     zoom: 1,
     isPanning: false,
     panStart: { x: 0, y: 0 },
     panStartOffset: { x: 0, y: 0 },
-    activeHub: null // Tracks which Hub we are currently focused on
+    activeHub: null 
 };
 
 let panAnimId = null;
