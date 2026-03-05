@@ -14,23 +14,22 @@ function centerOnNode(nodeId, zoomToFit = false) {
     const node = state.nodes.find(n => n.id === nodeId);
     if (!node) return;
 
-    let elWidth = node.type === 'hub' ? node.width : 160;
-    let elHeight = node.type === 'hub' ? node.height : 76;
+    // Use the saved width/height or default to 160/76 (fallback for older saved diagrams)
+    let elWidth = node.width || 160;
+    let elHeight = node.height || 76;
 
     const whiteboard = document.getElementById('whiteboard');
     
     let targetZoom = state.zoom;
     if (zoomToFit) {
-        // Calculate the scale needed to make the Hub fill the screen with padding
         const padding = 120;
         const scaleX = whiteboard.clientWidth / (elWidth + padding);
         const scaleY = whiteboard.clientHeight / (elHeight + padding);
-        targetZoom = Math.min(scaleX, scaleY, 2); // Don't zoom in more than 2x
+        targetZoom = Math.min(scaleX, scaleY, 2); 
     } else if (!state.activeHub) {
-        targetZoom = 1; // Reset zoom if focusing a normal node outside a hub
+        targetZoom = 1; 
     }
 
-    // Mathematical center taking zoom into account
     const targetPanX = (whiteboard.clientWidth / 2) - (node.x + elWidth / 2) * targetZoom;
     const targetPanY = (whiteboard.clientHeight / 2) - (node.y + elHeight / 2) * targetZoom;
 
