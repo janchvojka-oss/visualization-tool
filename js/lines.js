@@ -2,10 +2,9 @@ function getPortCoords(nodeId, portId) {
     const node = state.nodes.find(n => n.id === nodeId);
     if (!node) return null;
     
-    // Check actual dynamically generated dimensions
-    const width = node.type === 'hub' ? node.width : 160;
-    const el = document.getElementById(`node-${nodeId}`);
-    const height = el ? el.offsetHeight : (node.type === 'hub' ? node.height : 76);
+    // Apply width/height for ALL node types
+    const width = node.width || 160;
+    const height = node.height || 76;
 
     const portDef = PORTS.find(p => p.id === portId) || PORTS.find(p => p.id === 't50');
     return {
