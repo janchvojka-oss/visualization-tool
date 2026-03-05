@@ -1,8 +1,8 @@
 // --- Spatial Helper ---
 function isInside(node, hub) {
     if (node.id === hub.id) return false;
-    const nodeWidth = node.type === 'hub' ? node.width : 160;
-    const nodeHeight = node.type === 'hub' ? node.height : 76;
+    const nodeWidth = node.width || 160;
+    const nodeHeight = node.height || 76;
     const cx = node.x + nodeWidth / 2;
     const cy = node.y + nodeHeight / 2;
     return cx >= hub.x && cx <= hub.x + hub.width && cy >= hub.y && cy <= hub.y + hub.height;
@@ -37,13 +37,21 @@ function addNode() {
     if (state.mode !== 'EDIT') return;
     const whiteboard = document.getElementById('whiteboard');
     const newNode = {
-        id: Date.now(), type: 'rectangle',
+        id: Date.now(), 
+        type: 'rectangle',
         x: (whiteboard.clientWidth / 2) - state.pan.x - 80,
         y: (whiteboard.clientHeight / 2) - state.pan.y - 50,
-        text: 'New Bubble', level: 1, details: '<p>Start typing...</p>', related:[]
+        width: 160,   // <--- Added specific default width
+        height: 76,   // <--- Added specific default height
+        text: 'New Bubble', 
+        level: 1, 
+        details: '<p>Start typing details here...</p>', 
+        related:[]   // <--- This is where it cut off!
     };
     state.nodes.push(newNode);
-    render(); selectNode(newNode.id); centerOnNode(newNode.id);
+    render(); 
+    selectNode(newNode.id); 
+    centerOnNode(newNode.id);
 }
 
 function addHub() {
